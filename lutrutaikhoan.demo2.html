@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Đội Thanh Niên Xung Kích - ĐH Công Đoàn</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            min-height: 100vh;
+        }
+
+        /* TRANG 1: ĐĂNG NHẬP */
+        #page-login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://thanhgiong.vn/uploads/2018/08/03/2_1.jpg') no-repeat center center/cover;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            color: #0056b3;
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .login-btn-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .btn-primary:hover {
+            background-color: #003d80;
+        }
+
+        .btn-primary:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* HEADER DÙNG CHUNG CHO TRANG 2 & TRANG 3 */
+        .app-header {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-bottom: 3px solid #0056b3;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .flags-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 10px;
+        }
+
+        .flag-item img {
+            height: 65px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .header-title {
+            text-align: center;
+            color: #0056b3;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* TRANG 2: TRA CỨU */
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .column-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .column-box h3 {
+            color: #0056b3;
+            font-size: 16px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-search {
+            margin-top: 25px;
+            grid-column: span 3;
+            text-align: center;
+        }
+
+        /* TRANG 3: THÔNG TIN THÀNH VIÊN */
+        .profile-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+
+        .profile-title {
+            color: #ce1126;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .info-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-item {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .info-item strong {
+            color: #0056b3;
+        }
+
+        .activity-stat {
+            background: #e6f0fa;
+            border-left: 5px solid #0056b3;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .search-grid, .info-summary {
+                grid-template-columns: 1fr;
+            }
+            .btn-search {
+                grid-column: span 1;
+            }
+            .flags-container {
+                gap: 15px;
+            }
+            .flag-item img {
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TRANG 1: GIAO DIỆN ĐĂNG NHẬP -->
+    <div id="page-login">
+        <div class="login-card">
+            <h2>ĐỘI TNXK ĐH CÔNG ĐOÀN</h2>
+            <div id="login-error" class="error-message">Tài khoản không tồn tại !</div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="gmail">Gmail</label>
+                    <input type="email" id="gmail" placeholder="nhapemail@gmail.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <div class="login-btn-row">
+                    <button type="submit" id="submit-btn" class="btn-primary">Đăng Nhập</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP: GIAO DIỆN TRANG 2 & 3 -->
+    <div id="app-content" class="hidden">
+        
+        <!-- HEADER VỚI 3 CỜ -->
+        <header class="app-header">
+            <div class="flags-container">
+                <!-- Cờ Thanh Niên Việt Nam (Bên trái) -->
+                <div class="flag-item">
+                    <img src="https://thanhgiong.vn/uploads/2018/08/03/2_1.jpg" alt="Cờ Thanh Niên Việt Nam">
+                </div>
+                <!-- Cờ Việt Nam (Chính giữa) -->
+                <div class="flag-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg" alt="Cờ Việt Nam">
+                </div>
+                <!-- Cờ Đảng (Bên phải) -->
+                <div class="flag-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_the_Communist_Party_of_Vietnam.svg" alt="Cờ Đảng">
+                </div>
+            </div>
+            <div class="header-title">ĐỘI THANH NIÊN XUNG KÍCH - TRƯỜNG ĐẠI HỌC CÔNG ĐOÀN</div>
+        </header>
+
+        <!-- TRANG 2: BẢNG TRA CỨU -->
+        <div id="page-search" class="container">
+            <div class="search-grid">
+                
+                <!-- CỘT 1: ĐỘI & TỔ -->
+                <div class="column-box">
+                    <h3>Cột 1: Đội & Tổ Tra Cứu</h3>
+                    <label for="select-doi">Chọn Đội:</label>
+                    <select id="select-doi" onchange="updateToOptions()">
+                        <option value="">-- Chọn Đội --</option>
+                        <option value="Đội 1">Đội 1</option>
+                        <option value="Đội 2">Đội 2</option>
+                        <option value="Đội 3">Đội 3</option>
+                        <option value="Đội 4">Đội 4</option>
+                    </select>
+
+                    <label for="select-to">Chọn Tổ:</label>
+                    <select id="select-to" disabled>
+                        <option value="">-- Chọn Tổ --</option>
+                    </select>
+                </div>
+
+                <!-- CỘT 2: THÁNG HOẠT ĐỘNG -->
+                <div class="column-box">
+                    <h3>Cột 2: Tháng Hoạt Động</h3>
+                    <label for="select-thang">Chọn Tháng:</label>
+                    <select id="select-thang">
+                        <option value="">-- Chọn Tháng --</option>
+                        <script>
+                            for(let i=1; i<=12; i++){
+                                document.write(`<option value="Tháng ${i}">Tháng ${i}</option>`);
+                            }
+                        </script>
+                    </select>
+                </div>
+
+                <!-- CỘT 3: TRA CỨU TÊN -->
+                <div class="column-box">
+                    <h3>Cột 3: Tra Cứu Tên</h3>
+                    <label for="input-name">Họ và Tên Sinh Viên:</label>
+                    <input type="text" id="input-name" placeholder="Nhập tên sinh viên...">
+                </div>
+
+                <div class="btn-search">
+                    <button class="btn-primary" onclick="executeSearch()" style="max-width: 300px;">Tra Cứu Thông Tin</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TRANG 3: THÔNG TIN THÀNH VIÊN -->
+        <div id="page-result" class="container hidden">
+            <div class="profile-card">
+                <div class="profile-title">Thông Tin Hoạt Động Thành Viên</div>
+                
+                <div class="info-summary">
+                    <div class="info-item"><strong>Họ và tên:</strong> <span id="res-name">---</span></div>
+                    <div class="info-item"><strong>Đơn vị:</strong> <span id="res-doi-to">---</span></div>
+                    <div class="info-item"><strong>Thời gian:</strong> <span id="res-thang">---</span></div>
+                    <div class="info-item"><strong>Tài khoản tra cứu:</strong> <span id="res-account">---</span></div>
+                </div>
+
+                <div class="activity-stat">
+                    📊 <strong>Kết quả hoạt động:</strong> Trong <span id="stat-thang">tháng này</span>, thành viên <strong id="stat-name">---</strong> đã tham gia 
+                    <span id="stat-joined" style="color: #0056b3; font-weight: bold; font-size: 18px;">0</span> / 
+                    <span id="stat-total" style="color: #333; font-weight: bold; font-size: 18px;">0</span> tổng số hoạt động.
+                </div>
+
+                <div class="action-buttons">
+                    <!-- Nút mở file Google Sheet theo link yêu cầu -->
+                    <a href="https://docs.google.com/spreadsheets/d/1Psj0bM_6jduJiAFUrEECvfk7dU-UALBZBYvueTyLcmQ/edit?usp=sharing" target="_blank" class="btn-secondary">➕ Nhập Dữ Liệu (Google Sheet)</a>
+                    
+                    <button class="btn-danger" onclick="handleLogout()">🚪 Đăng Xuất</button>
+                </div>
+
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="btn-primary" onclick="backToSearch()" style="width: auto; padding: 8px 16px;">🔍 Tra cứu khác</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Dữ liệu Đội - Tổ
+        const toData = {
+            "Đội 1": ["Tổ 1.1", "Tổ 1.2", "Tổ 1.3"],
+            "Đội 2": ["Tổ 2.1", "Tổ 2.2", "Tổ 2.3"],
+            "Đội 3": ["Tổ 3.1", "Tổ 3.2", "Tổ 3.3"],
+            "Đội 4": ["Tổ 4.1", "Tổ 4.2", "Tổ 4.3"]
+        };
+
+        let sheetData = [];
+
+        // THAY THẾ LINK NÀY BẰNG URL WEB APP CỦA BẠN SAU KHỦI DEPLOY APPS SCRIPT
+        const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+
+        window.onload = function() {
+            const savedUser = localStorage.getItem("tnxk_user");
+            if (savedUser) {
+                showAppUI(savedUser);
+            }
+            fetchActivityData();
+        };
+
+        // Cập nhật tùy chọn Tổ
+        function updateToOptions() {
+            const doiSelect = document.getElementById("select-doi").value;
+            const toSelect = document.getElementById("select-to");
+            
+            toSelect.innerHTML = '<option value="">-- Chọn Tổ --</option>';
+            
+            if (doiSelect && toData[doiSelect]) {
+                toSelect.disabled = false;
+                toData[doiSelect].forEach(to => {
+                    const opt = document.createElement("option");
+                    opt.value = to;
+                    opt.textContent = to;
+                    toSelect.appendChild(opt);
+                });
+            } else {
+                toSelect.disabled = true;
+            }
+        }
+
+        // XỬ LÝ ĐĂNG NHẬP VỚI KIỂM TRA TÀI KHOẢN TRÊN GOOGLE SHEET
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById("gmail").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorDiv = document.getElementById("login-error");
+            const submitBtn = document.getElementById("submit-btn");
+
+            errorDiv.style.display = "none";
+            
+            if (!email || !password) {
+                errorDiv.textContent = "Vui lòng nhập đầy đủ Gmail và Mật khẩu!";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            // Nếu chưa thay URL Google Apps Script
+            if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
+                alert("Vui lòng cấu hình GOOGLE_SCRIPT_URL trong file HTML!");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Đang kiểm tra...";
+
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    localStorage.setItem("tnxk_user", email);
+                    showAppUI(email);
+                } else {
+                    errorDiv.textContent = result.message || "Tài khoản không tồn tại !";
+                    errorDiv.style.display = "block";
+                }
+            } catch (error) {
+                console.error("Lỗi khi kết nối:", error);
+                errorDiv.textContent = "Không thể kết nối đến máy chủ. Vui lòng thử lại!";
+                errorDiv.style.display = "block";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Đăng Nhập";
+            }
+        }
+
+        function showAppUI(email) {
+            document.getElementById("page-login").classList.add("hidden");
+            document.getElementById("app-content").classList.remove("hidden");
+            document.getElementById("res-account").textContent = email;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("tnxk_user");
+            document.getElementById("app-content").classList.add("hidden");
+            document.getElementById("page-login").classList.remove("hidden");
+            document.getElementById("page-result").classList.add("hidden");
+            document.getElementById("page-search").classList.remove("hidden");
+            document.getElementById("login-error").style.display = "none";
+        }
+
+        function executeSearch() {
+            const doi = document.getElementById("select-doi").value;
+            const to = document.getElementById("select-to").value;
+            const thang = document.getElementById("select-thang").value;
+            const name = document.getElementById("input-name").value.trim();
+
+            if (!doi || !to || !thang || !name) {
+                alert("Vui lòng chọn đầy đủ Đội, Tổ, Tháng và nhập Họ tên sinh viên!");
+                return;
+            }
+
+            document.getElementById("res-name").textContent = name;
+            document.getElementById("res-doi-to").textContent = `${doi} - ${to}`;
+            document.getElementById("res-thang").textContent = thang;
+            document.getElementById("stat-name").textContent = name;
+            document.getElementById("stat-thang").textContent = thang.toLowerCase();
+
+            // Tìm trong dữ liệu lấy về từ Google Sheet
+            let matched = sheetData.find(item => 
+                item.name && item.name.toLowerCase().includes(name.toLowerCase()) &&
+                item.thang === thang
+            );
+
+            if (matched) {
+                document.getElementById("stat-joined").textContent = matched.joined || 0;
+                document.getElementById("stat-total").textContent = matched.total || 0;
+            } else {
+                document.getElementById("stat-joined").textContent = 0;
+                document.getElementById("stat-total").textContent = 0;
+            }
+
+            document.getElementById("page-search").classList.add("hidden");
+            document.getElementById("page-result").classList.remove("hidden");
+        }
+
+        function backToSearch() {
+            document.getElementById("page-result").classList.add("hidden");
+            document.getElementById("page-search").classList.remove("hidden");
+        }
+
+        // Tải dữ liệu hoạt động sinh viên
+        function fetchActivityData() {
+            if (GOOGLE_SCRIPT_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
+                fetch(GOOGLE_SCRIPT_URL)
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.status === "success") {
+                            sheetData = res.data;
+                        }
+                    })
+                    .catch(err => console.error("Lỗi tải dữ liệu hoạt động:", err));
+            }
+        }
+    </script>
+</body>
+</html>
